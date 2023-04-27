@@ -1,6 +1,6 @@
 import './css/styles.css';
 import axios from 'axios';
-import { fetchPhoto } from './fetchPhoto';
+import { fetchPhoto } from './fetchPhoto.js';
 import Notiflix from 'notiflix';
 
 const inputText = document.querySelector('input');
@@ -17,39 +17,23 @@ form.addEventListener("submit", onSubmit)
 
 
 function onSubmit(e) {
-    e.preventDefault()
+    e.preventDefault();
+    clearHTML();
     const form = e.currentTarget;
     const query = form.elements.searchQuery.value;
 
-    if (query.length === 0) {
-            return Notiflix.Notify.failure('Sorry, there are no images matching your search query. Please try again.');
-        }
     
-     fetchPhoto(query).then(()=>{createMarkup(hits)}) 
-            
-            // // if (hits.length === 0) {
-            // // return Notiflix.Notify.failure('Sorry, there are no images matching your search query. Please try again.');
-            
-            // // createMarkup(hits)
-            
-            // }
-
-        
-    //     })
-    //         .catch(onError)
-    //         .finally(() => form.reset())
-    // );
-// }
-    //     .then(({ hits }) => {
-    //     if (hits.length === 0) {
-    //         return Notiflix.Notify.failure('Sorry, there are no images matching your search query. Please try again.');
-    //     }
-    // }
+     fetchPhoto(query).then(({ hits }) => {
+         if (hits.length === 0) {
+             return Notiflix.Notify.failure('Sorry, there are no images matching your search query. Please try again.');
+         } 
+         
+         createMarkup(hits);
+    }
        
-    // ).catch(onError).finally(()=> form.reset())
-   
-   
+    ).catch(onError).finally(() => form.reset())
 }
+         
 
 
 
@@ -76,7 +60,7 @@ function onSubmit(e) {
     </p>
   </div>
 </div>`).join('');
-        return console.log(gallery.innerHTML = markup);
+        return gallery.innerHTML = markup;
         // gallery.innerHTML = markup;
         
     }
@@ -85,6 +69,6 @@ function onError(err){
 console.log(err)
 }
 
-function onComplite() {
-    
+function clearHTML() {
+    gallery.innerHTML = ""
 }
