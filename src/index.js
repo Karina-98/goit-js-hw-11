@@ -6,11 +6,18 @@ import SimpleLightbox from "simplelightbox";
 import "simplelightbox/dist/simple-lightbox.min.css";
 
 
-
 const inputText = document.querySelector('input');
 const form = document.querySelector('form');
 const btn = document.querySelector('button');
 const gallery = document.querySelector('.gallery');
+
+const lightbox = new SimpleLightbox('.gallery a', { 
+   
+   captionsData: 'alt',
+   captionPosition: 'bottom',
+   captionDelay: 250,
+   
+ });
 
 
 
@@ -65,14 +72,25 @@ async function getPhotoMarkup() {
 
     getTotalHits(totalHits)
     createMarkup(hits)
+    lightbox.refresh();
+   
     
     
   }).catch(onError)
 }
 
 async function fetchMorePhoto() {
-   await getPhotoMarkup();
+  await getPhotoMarkup();
+   const { height: cardHeight } = document
+  .querySelector(".gallery")
+  .firstElementChild.getBoundingClientRect();
+
+window.scrollBy({
+  top: cardHeight * 2,
+  behavior: "smooth",
+});
 }
+
 
 async function getTotalHits() { 
   await apiService.getfetchPhoto().then(({ totalHits }) =>
@@ -127,10 +145,31 @@ function clearHTML() {
 
 
 
-// const lightbox = new SimpleLightbox('.gallery a', { 
-   
-//    captionsData: 'alt',
-//    captionPosition: 'bottom',
-//    captionDelay: 250,
-   
-//  });
+
+
+
+ const btnUp = {
+  el: document.querySelector('.btn-up'),
+  show() {
+    this.el.classList.remove('btn-up_hide');
+  },
+  hide() {
+    this.el.classList.add('btn-up_hide');
+  },
+  addEventListener() {
+    window.addEventListener('scroll', () => {
+      const scrollY = window.scrollY || document.documentElement.scrollTop;
+      // если страница прокручена больше чем на 400px, то делаем кнопку видимой, иначе скрываем
+      scrollY > 400 ? this.show() : this.hide();
+    });
+    document.querySelector('.btn-up').onclick = () => {
+      window.scrollTo({
+        top: 0,
+        left: 0,
+        behavior: 'smooth'
+      });
+    }
+  }
+}
+
+btnUp.addEventListener();
