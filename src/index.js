@@ -66,12 +66,15 @@ async function getPhotoMarkup() {
     if (hits.length === 0) {
       loadMore.hide()
       return Notiflix.Notify.failure('Sorry, there are no images matching your search query. Please try again.');
+    }else if (hits.length < 40) {
+      loadMore.hide()
+      Notiflix.Notify.success(`Hooray! We found ${totalHits} images.`)
+    } else {
+      Notiflix.Notify.success(`Hooray! We found ${totalHits} images.`)
     }
+    // console.log(totalHits);
 
-    console.log(totalHits);
-
-    getTotalHits(totalHits)
-    createMarkup(hits)
+   return  createMarkup(hits)
     lightbox.refresh();
    
     
@@ -81,7 +84,8 @@ async function getPhotoMarkup() {
 
 async function fetchMorePhoto() {
   await getPhotoMarkup();
-   const { height: cardHeight } = document
+  
+  const { height: cardHeight } = document
   .querySelector(".gallery")
   .firstElementChild.getBoundingClientRect();
 
@@ -92,18 +96,20 @@ window.scrollBy({
 }
 
 
-async function getTotalHits() { 
-  await apiService.getfetchPhoto().then(({ totalHits }) =>
-  {
-     if (totalHits === 0) {
-      Notiflix.Notify.failure("We're sorry, but you've reached the end of search results.")
-    } else if (totalHits < 40) {
-      Notiflix.Notify.success(`Hooray! We found ${totalHits} images.`)
-    } else {
-      Notiflix.Notify.success(`Hooray! We found ${totalHits} images.`)
-    }
- } )
-}
+// async function getTotalHits() { 
+//   await apiService.getfetchPhoto().then(({ totalHits }) =>
+//   {
+//     if (totalHits === 0) {
+//        loadMore.hide()
+//       Notiflix.Notify.failure("We're sorry, but you've reached the end of search results.")
+//     } else if (totalHits < 40) {
+//        Notiflix.Notify.success(`Hooray! We found ${totalHits} images.`)
+//        loadMore.hide()
+//      } else {
+//        Notiflix.Notify.success(`Hooray! We found ${totalHits} images.`)
+//     }
+//  } )
+// }
 
    function createMarkup(hits) {
         const markup = hits.map(({ webformatURL, largeImageURL, tags, likes, views, comments, downloads }) =>
@@ -159,7 +165,7 @@ function clearHTML() {
   addEventListener() {
     window.addEventListener('scroll', () => {
       const scrollY = window.scrollY || document.documentElement.scrollTop;
-      // если страница прокручена больше чем на 400px, то делаем кнопку видимой, иначе скрываем
+      
       scrollY > 400 ? this.show() : this.hide();
     });
     document.querySelector('.btn-up').onclick = () => {
