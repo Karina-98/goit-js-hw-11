@@ -68,7 +68,7 @@ async function getPhotoMarkup() {
       return Notiflix.Notify.failure('Sorry, there are no images matching your search query. Please try again.');
     }else if (hits.length < 40) {
       loadMore.hide()
-      Notiflix.Notify.success(`Hooray! We found ${totalHits} images.`)
+      Notiflix.Notify.success("We're sorry, but you've reached the end of search results.")
     } else {
       Notiflix.Notify.success(`Hooray! We found ${totalHits} images.`)
     }
