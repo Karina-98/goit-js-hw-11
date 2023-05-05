@@ -30,3 +30,52 @@ export default class ApiService {
      this.page = 1; 
    }
 }
+
+
+
+
+
+const URL = 'https://api.themoviedb.org/3/trending/movie/week?api_key=249f222afb1002186f4d88b2b5418b55';
+
+import axios from "axios";
+const galleryList = document.querySelector(".gallery-weekly__list");
+
+function getTrendData() {
+const URL = 'https://api.themoviedb.org/3/trending/movie/week?api_key=249f222afb1002186f4d88b2b5418b55';
+
+    return axios.get(URL).then((data) => {
+        //  incrementPage();
+         console.log(data.data.results);
+         return data.data
+      })
+}
+
+function createMarkup(results) {
+    const markup = results.slice(0, 3).map(({original_title, release_date, backdrop_path, poster_path, vote_average
+}) => 
+        ` <li class='gallery-weekly__list-elem'>           
+        <a class='gallery-weekly__link' href="${poster_path}"><img class='gallery-weekly__image' src="https://image.tmdb.org/t/p/w400/${poster_path}" alt="" loading="lazy" ></a>
+        <div class="info">
+            <h3>${original_title}</h3>
+            <b>${release_date}</b>
+        </div>
+        <b>${vote_average}</b>
+    </li>`
+    ).join('') 
+
+    // return galleryList.insertAdjacentElement("beforeend", markup);
+    return galleryList.innerHTML = markup
+    // return console.log(markup)
+    
+    
+}
+
+getTrendData().then(({ results }) => {
+    console.log(results)
+    return createMarkup(results);
+})
+
+
+
+
+

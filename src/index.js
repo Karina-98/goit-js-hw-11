@@ -52,7 +52,7 @@ function onSubmit(e) {
   console.log(apiService);
    
  
-  getPhotoMarkup()
+  getPhotoMarkup()``
 
   inputText.value = ""
     // .catch(onError).finally(() => form.reset())
